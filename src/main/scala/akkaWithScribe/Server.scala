@@ -4,12 +4,13 @@ import scala.concurrent.Await
 import scala.concurrent.duration._
 import akka.actor.ActorSystem
 import akka.dispatch.MonitorableThreadFactory
-import scribe.Logger
+import scribe.{ Level, Logger }
 import scribe.writer.FileWriter
 
 object Server extends App {
   // creates logs/app.log but this isn't populated; want to rely on slf4j regardless
 //  Logger.root.withHandler( writer = FileWriter.default ).replace()
+  Logger.root.withHandler( writer = FileWriter.default ).withMinimumLevel( Level.Debug ).replace()
 
   val system = ActorSystem()
   val tcpserver = system.actorOf( TCPConnectionManager.props( "localhost", 8080 ) )

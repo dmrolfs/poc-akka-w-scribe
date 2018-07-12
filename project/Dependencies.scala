@@ -62,7 +62,7 @@ object Dependencies {
   object logging extends SimpleModule {
     override val groupId: String = "com.outr"
     override val artifactIdRoot: String = "scribe"
-    override val version: String = "2.5.2-SNAPSHOT"
+    override val version: String = "2.5.2"
 
     def all = Seq(
       scribe,

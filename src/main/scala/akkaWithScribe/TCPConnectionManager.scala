@@ -2,7 +2,7 @@ package akkaWithScribe
 
 import java.net.InetSocketAddress
 
-import akka.actor.{ Actor, Props }
+import akka.actor.{ Actor, ActorLogging, Props }
 import akka.io.Tcp.{ Bind, Bound, Connected, Register }
 import akka.io.{ IO, Tcp }
 
@@ -13,18 +13,20 @@ object TCPConnectionManager {
   }
 }
 
-class TCPConnectionManager( hostname: String, port: Int ) extends Actor {
+class TCPConnectionManager( hostname: String, port: Int ) extends Actor with ActorLogging {
   import context.system
   IO( Tcp ) ! Bind( self, new InetSocketAddress( hostname, port ) )
 
   override def receive: Receive = {
     case m @ Bound( local ) => {
-      scribe.info( s"Server started on $local" )
+      log.info( s"ACTOR_LOGGING:Server started on $local" )
+      scribe.info( s"SCRIBE:Server started on $local" )
     }
 
     case m @ Connected( remote, local ) => {
       val handler = context.actorOf( TCPConnectionHandler.props )
-      scribe.info( s"New connnection: $local -> $remote" )
+      log.info( s"ACTOR_LOGGING:New connnection: $local -> $remote" )
+      scribe.info( s"SCRIBE:New connnection: $local -> $remote" )
       sender() ! Register( handler )
     }
   }

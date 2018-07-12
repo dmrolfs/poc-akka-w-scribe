@@ -24,6 +24,9 @@ class TCPConnectionManager( hostname: String, port: Int ) extends Actor with Act
     }
 
     case m @ Connected( remote, local ) => {
+      org.slf4j.MDC.put( "remote", remote.toString )
+      org.slf4j.MDC.put( "local", local.toString )
+      log.debug( "FIRST LOG Received a RequestA" )
       val handler = context.actorOf( TCPConnectionHandler.props )
       log.info( s"ACTOR_LOGGING:New connnection: $local -> $remote" )
       scribe.info( s"SCRIBE:New connnection: $local -> $remote" )
